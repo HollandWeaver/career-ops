@@ -13,7 +13,7 @@
 | File | Path | When |
 |------|------|------|
 | cv.md | `cv.md` (project root) | ALWAYS |
-| article-digest.md | `article-digest.md` (if exists) | ALWAYS (detailed proof points) |
+| article-digest.md | `article-digest.md` (if exists) | DOCX/CV generation and proof point writing only — skip for score-only triage |
 | profile.yml | `config/profile.yml` | ALWAYS (candidate identity and targets) |
 | _profile.md | `modes/_profile.md` | ALWAYS (user archetypes, narrative, negotiation) |
 
@@ -23,28 +23,44 @@
 
 ---
 
-## Scoring System
+## Match Scoring System
 
-The evaluation uses 6 blocks (A-F) with a global score of 1-5:
+Evaluations use **pure skills matching only**. Comp and archetype fit are informational — they do NOT affect the match score.
 
-| Dimension | What it measures |
-|-----------|-----------------|
-| Match con CV | Skills, experience, proof points alignment |
-| North Star alignment | How well the role fits the user's target archetypes (from _profile.md) |
-| Comp | Salary vs market (5=top quartile, 1=well below) |
-| Cultural signals | Company culture, growth, stability, remote policy |
-| Red flags | Blockers, warnings (negative adjustments) |
-| **Global** | Weighted average of above |
+### Score each JD requirement
 
-**Score interpretation:**
-- 4.5+ → Strong match, recommend applying immediately
-- 4.0-4.4 → Good match, worth applying
-- 3.5-3.9 → Decent but not ideal, apply only if specific reason
-- Below 3.5 → Recommend against applying (see Ethical Use in CLAUDE.md)
+| Match | Criteria | Weight |
+|-------|----------|--------|
+| **Strong** | Explicit CV evidence: named tool/skill, specific project, measurable outcome | 1.0 |
+| **Partial** | Adjacent experience: similar tool, related domain, implied coverage | 0.5 |
+| **Gap** | No CV evidence; "willingness to learn" framing required | 0.0 |
 
-## Archetype Detection
+**Hard requirements** = explicitly required (must-have tools, experience level, domain knowledge)
+**Soft requirements** = preferred / "bonus" / nice-to-have
 
-Classify every offer into one of these types (or hybrid of 2):
+### Calculation
+
+```
+Hard match = Σ(scores for hard requirements) / count(hard requirements)
+Soft match = Σ(scores for soft requirements) / count(soft requirements)
+Match % = ((Hard match × 0.70) + (Soft match × 0.30)) × 100
+```
+
+### Bucket assignment
+
+| Score | Bucket | Label |
+|-------|--------|-------|
+| > 90% | T1 | Strong fit |
+| 85–90% | T2 | Good fit |
+| 80–85% | T3 | Viable, 1–2 gaps |
+| 75–80% | T4 | Reach application |
+| < 75% | SKIP | Do not apply |
+
+**Score format in reports and tracker:** `XX% (TN)` — e.g., `87% (T2)`
+
+## Archetype Detection (Framing Aid — not a scoring dimension)
+
+Detecting the JD archetype helps frame proof points and STAR stories — it does NOT affect the match score. All archetypes are equally valid targets.
 
 | Archetype | Key signals in JD |
 |-----------|-------------------|
@@ -54,8 +70,10 @@ Classify every offer into one of these types (or hybrid of 2):
 | AI Solutions Architect | "architecture", "enterprise", "integration", "design", "systems" |
 | AI Forward Deployed | "client-facing", "deploy", "prototype", "fast delivery", "field" |
 | AI Transformation | "change management", "adoption", "enablement", "transformation" |
+| Data Engineering | "ETL", "pipeline", "ingestion", "lineage", "governance", "Databricks" |
+| ML / Analytics Engineering | "dbt", "modeling", "metrics layer", "Tableau", "data warehouse" |
 
-After detecting archetype, read `modes/_profile.md` for the user's specific framing and proof points for that archetype.
+Use detected archetype to select which proof points to emphasize (Bloque B) and which STAR stories to prepare (Bloque F).
 
 ## Global Rules
 
@@ -75,9 +93,9 @@ After detecting archetype, read `modes/_profile.md` for the user's specific fram
 0. **Cover letter:** If the form allows it, ALWAYS include one. Same visual design as CV. JD quotes mapped to proof points. 1 page max.
 1. Read cv.md, _profile.md, and article-digest.md (if exists) before evaluating
 1b. **First evaluation of each session:** Run `node cv-sync-check.mjs`. If warnings, notify user.
-2. Detect the role archetype and adapt framing per _profile.md
+2. Detect the role archetype (framing aid) and adapt proof point selection per _profile.md
 3. Cite exact lines from CV when matching
-4. Use WebSearch for comp and company data
+4. Use WebSearch for comp and company data (informational — not part of score)
 5. Register in tracker after evaluating
 6. Generate content in the language of the JD (EN default)
 7. Be direct and actionable -- no fluff
@@ -85,6 +103,7 @@ After detecting archetype, read `modes/_profile.md` for the user's specific fram
 8b. Case study URLs in PDF Professional Summary (recruiter may only read this).
 9. **Tracker additions as TSV** -- NEVER edit applications.md directly. Write TSV in `batch/tracker-additions/`.
 10. **Include `**URL:**` in every report header.**
+11. **Company dedup check:** Before registering a new application, scan `data/applications.md` for the same company. If a prior application exists for a substantially different role, flag it and ask the user to confirm before proceeding. (Applying to 2+ unrelated roles at the same company looks unfocused.)
 
 ### Tools
 
@@ -93,8 +112,8 @@ After detecting archetype, read `modes/_profile.md` for the user's specific fram
 | WebSearch | Comp research, trends, company culture, LinkedIn contacts, fallback for JDs |
 | WebFetch | Fallback for extracting JDs from static pages |
 | Playwright | Verify offers (browser_navigate + browser_snapshot). **NEVER 2+ agents with Playwright in parallel.** |
-| Read | cv.md, _profile.md, article-digest.md, cv-template.html |
-| Write | Temporary HTML for PDF, applications.md, reports .md |
+| Read | cv.md, _profile.md, article-digest.md (when generating DOCX/proof points) |
+| Write | Resume JSON for build_resume.mjs, applications.md, reports .md |
 | Edit | Update tracker |
 | Canva MCP | Optional visual CV generation. Duplicate base design, edit text, export PDF. Requires `canva_resume_design_id` in profile.yml. |
 | Bash | `node generate-pdf.mjs` |

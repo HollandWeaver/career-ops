@@ -22,6 +22,10 @@ There are two layers. Read `DATA_CONTRACT.md` for the full list.
 
 **THE RULE: When the user asks to customize anything (archetypes, narrative, negotiation scripts, proof points, location policy, comp targets), ALWAYS write to `modes/_profile.md` or `config/profile.yml`. NEVER edit `modes/_shared.md` for user-specific content.** This ensures system updates don't overwrite their customizations.
 
+## Token Efficiency
+
+When modifying mode files, adding new modes, or changing how files are loaded, read `TOKEN_EFFICIENCY.md` first. It documents the gating logic, file loading strategy, model selection, and mode file design rules that keep quality high without unnecessary token cost. Do not load it for routine JD evaluations.
+
 ## Update Check
 
 On the first message of each session, run the update checker silently:

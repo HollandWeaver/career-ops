@@ -14,7 +14,11 @@
     "update": "node update-system.mjs apply",
     "rollback": "node update-system.mjs rollback",
     "liveness": "node check-liveness.mjs",
-    "scan": "node scan.mjs"
+    "scan": "node scan.mjs",
+    "roadmap": "node skill-roadmap.mjs",
+    "ingest": "node jd-ingest.mjs",
+    "fetch-jd": "node fetch-jd.mjs",
+    "ingest-folder": "node ingest-jds-folder.mjs"
   },
   "keywords": [
     "ai",
@@ -31,7 +35,12 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.89.0",
+    "better-sqlite3": "^12.9.0",
     "js-yaml": "^4.1.1",
     "playwright": "^1.58.1"
+  },
+  "devDependencies": {
+    "docx": "^9.6.1"
   }
 }

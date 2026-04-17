@@ -16,7 +16,7 @@ Eres un worker de evaluación de ofertas de empleo for the candidate (read name 
 |---------|---------------|--------|
 | cv.md | `cv.md (project root)` | SIEMPRE |
 | llms.txt | `llms.txt (if exists)` | SIEMPRE |
-| article-digest.md | `article-digest.md (project root)` | SIEMPRE (proof points) |
+| article-digest.md | `article-digest.md (project root)` | DOCX/CV generation and proof points only — skip for score-only triage |
 | i18n.ts | `i18n.ts (if exists, optional)` | Solo entrevistas/deep |
 | cv-template.html | `templates/cv-template.html` | Para PDF |
 | generate-pdf.mjs | `generate-pdf.mjs` | Para PDF |
@@ -138,16 +138,34 @@ Top 5 cambios al CV + Top 5 cambios a LinkedIn.
 - 1 case study recomendado (cuál proyecto presentar y cómo)
 - Preguntas red-flag y cómo responderlas
 
-#### Score Global
+#### SKIP Gate
 
-| Dimensión | Score |
-|-----------|-------|
-| Match con CV | X/5 |
-| Alineación North Star | X/5 |
-| Comp | X/5 |
-| Señales culturales | X/5 |
-| Red flags | -X (si hay) |
-| **Global** | **X/5** |
+After computing the match score below, check the bucket:
+
+- **< 75% (SKIP):** Write minimal report (header + Blocks A + B only). Write TSV with status `NO APLICAR`. **Skip Pasos 3–4** (no PDF). Go directly to Paso 5 (output JSON).
+- **75–85% (T3/T4):** Run Blocks C + E. Skip Block D (no WebSearch). Skip Block F. Generate DOCX.
+- **> 85% (T1/T2):** Run full A–F. Generate DOCX.
+
+#### Match Score
+
+Calculate pure skills match (see `_shared.md` for full formula):
+
+```
+Hard match = Σ(Strong=1.0, Partial=0.5, Gap=0.0 for hard reqs) / count(hard reqs)
+Soft match = Σ(Strong=1.0, Partial=0.5, Gap=0.0 for soft reqs) / count(soft reqs)
+Match % = ((Hard × 0.70) + (Soft × 0.30)) × 100
+```
+
+| Metric | Value |
+|--------|-------|
+| Hard requirements matched | X Strong, X Partial, X Gap |
+| Soft requirements matched | X Strong, X Partial, X Gap |
+| **Match %** | **XX% (TN)** |
+| Recommendation | APPLY / CONSIDER / SKIP |
+
+**Bucket:** T1 (>90%) / T2 (85-90%) / T3 (80-85%) / T4 (75-80%) / SKIP (<75%)
+
+Comp and archetype fit are informational notes only — they do NOT affect Match %.
 
 ### Paso 3 — Guardar Report .md
 
@@ -279,8 +297,10 @@ batch/tracker-additions/{{ID}}.tsv
 
 Formato TSV (una sola línea, sin header, 9 columnas tab-separated):
 ```
-{next_num}\t{{DATE}}\t{empresa}\t{rol}\t{status}\t{score}/5\t{pdf_emoji}\t[{{REPORT_NUM}}](reports/{{REPORT_NUM}}-{company-slug}-{{DATE}}.md)\t{nota_1_frase}
+{next_num}\t{{DATE}}\t{empresa}\t{rol}\t{status}\t{XX}% ({TN})\t{pdf_emoji}\t[{{REPORT_NUM}}](reports/{{REPORT_NUM}}-{company-slug}-{{DATE}}.md)\t{nota_1_frase}
 ```
+
+Score format: `87% (T3)` — match percentage + tier bucket. NOT the old `X.X/5` format.
 
 **Columnas TSV (orden exacto):**
 
@@ -313,7 +333,8 @@ Al terminar, imprime por stdout un resumen JSON para que el orquestador lo parse
   "report_num": "{{REPORT_NUM}}",
   "company": "{empresa}",
   "role": "{rol}",
-  "score": {score_num},
+  "match_pct": {match_percentage_as_number},
+  "bucket": "{T1|T2|T3|T4|SKIP}",
   "pdf": "{ruta_pdf}",
   "report": "{ruta_report}",
   "error": null

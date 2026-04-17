@@ -1,24 +1,43 @@
-# Modo: pdf — Generación de PDF ATS-Optimizado
+# Modo: pdf — Resume Generation (PDF + DOCX)
+
+## Style Guide
+
+**ALWAYS read `modes/resume-style.md` before generating any resume.** It defines:
+- The canonical formatting rules (prose bullets, no bold labels, ALL CAPS headers)
+- The reference-doc path for DOCX generation
+- Key metrics that must appear (12M+ rows, 40% test volume, 52 textbooks, GPA 3.4)
+- Hard rules about what to include/exclude (no Lockheed for AI roles, no Core Competencies grid)
 
 ## Pipeline completo
 
-1. Lee `cv.md` como fuentes de verdad
-2. Pide al usuario el JD si no está en contexto (texto o URL)
-3. Extrae 15-20 keywords del JD
-4. Detecta idioma del JD → idioma del CV (EN default)
-5. Detecta ubicación empresa → formato papel:
+1. Lee `modes/resume-style.md` para reglas de formato
+2. Lee `cv.md` como fuente de verdad de contenido
+3. Pide al usuario el JD si no está en contexto (texto o URL)
+4. Extrae 15-20 keywords del JD
+5. Detecta idioma del JD → idioma del CV (EN default)
+6. Detecta ubicación empresa → formato papel:
    - US/Canada → `letter`
    - Resto del mundo → `a4`
-6. Detecta arquetipo del rol → adapta framing
-7. Reescribe Professional Summary inyectando keywords del JD + exit narrative bridge ("Built and sold a business. Now applying systems thinking to [domain del JD].")
-8. Selecciona top 3-4 proyectos más relevantes para la oferta
-9. Reordena bullets de experiencia por relevancia al JD
-10. Construye competency grid desde requisitos del JD (6-8 keyword phrases)
+7. Detecta arquetipo del rol → adapta framing
+8. Reescribe Professional Summary inyectando keywords del JD
+9. Selecciona top 3-4 proyectos más relevantes para la oferta
+10. Reordena bullets de experiencia por relevancia al JD — aplica reglas de `resume-style.md` (prose bullets, verbs fuertes, no bold labels)
 11. Inyecta keywords naturalmente en logros existentes (NUNCA inventa)
-12. Genera HTML completo desde template + contenido personalizado
-13. Escribe HTML a `/tmp/cv-candidate-{company}.html`
-14. Ejecuta: `node generate-pdf.mjs /tmp/cv-candidate-{company}.html output/cv-candidate-{company}-{YYYY-MM-DD}.pdf --format={letter|a4}`
-15. Reporta: ruta del PDF, nº páginas, % cobertura de keywords
+12. Genera markdown siguiendo la estructura exacta de `resume-style.md` (H1 nombre, H2 sections, H3 company lines con tab, bullets prose)
+13. Escribe el markdown a `output/temp-resume.md`
+14. **Genera DOCX** (editable, para el candidato):
+    ```bash
+    pandoc output/temp-resume.md \
+      --reference-doc="C:/Users/Holland Weaver/iCloudDrive/Documents/Professional/Resumes/Holland Weaver resume Analytics Engineer FanDuel.docx" \
+      -o "output/Holland Weaver resume {Company} {Role}.docx"
+    ```
+15. **Genera PDF** (ATS, para upload):
+    - Convierte el markdown a Typst basándose en `resume.typ`
+    - Escribe a `output/temp-resume.typ`
+    - Ejecuta: `typst compile "output/temp-resume.typ" "output/Holland Weaver resume {Company} {Role}.pdf"`
+    - Ejecuta: `rm output/temp-resume.typ`
+16. Ejecuta: `rm output/temp-resume.md` para limpiar archivos temporales.
+17. Reporta: rutas del DOCX y PDF, % cobertura de keywords
 
 ## Reglas ATS (parseo limpio)
 
@@ -171,6 +190,12 @@ d. Report: PDF path, file size, Canva design URL (for manual tweaking)
 - If text elements can't be mapped → warn user, show what was found, ask for manual mapping
 - If `find_and_replace_text` finds no matches → try broader substring matching
 - Always provide the Canva design URL so the user can edit manually if auto-edit fails
+
+## ATS Check (post-generation)
+
+After generating the DOCX/PDF, run the ATS checker if a JD is in context:
+
+Read `modes/ats.md` and run the full ATS analysis inline. Save the `## H) ATS Score` section alongside the resume output. If called from auto-pipeline, skip — ATS check runs in Step 3.5 there.
 
 ## Post-generación
 

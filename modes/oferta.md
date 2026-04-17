@@ -1,157 +1,203 @@
-# Modo: oferta — Evaluación Completa A-F
+# Mode: oferta — Full Evaluation
 
-Cuando el candidato pega una oferta (texto o URL), entregar SIEMPRE los 6 bloques:
+When the candidate pastes an offer (text or URL), deliver the following blocks in order:
 
-## Paso 0 — Detección de Arquetipo
+## Step 0 — Archetype Detection (framing only, not scored)
 
-Clasificar la oferta en uno de los 6 arquetipos (ver `_shared.md`). Si es híbrido, indicar los 2 más cercanos. Esto determina:
-- Qué proof points priorizar en bloque B
-- Cómo reescribir el summary en bloque E
-- Qué historias STAR preparar en bloque F
+Classify the offer into one of the archetypes (see `_shared.md`). If hybrid, indicate the 2 closest. This determines:
+- Which proof points to prioritize in Block B
+- How to reframe the summary in Block E
+- Which STAR stories to prepare in Block F
 
-## Bloque A — Resumen del Rol
+## Block A — Role Summary
 
-Tabla con:
-- Arquetipo detectado
-- Domain (platform/agentic/LLMOps/ML/enterprise)
-- Function (build/consult/manage/deploy)
+Table with:
+- Detected archetype
+- Domain (platform / agentic / LLMOps / ML / data / enterprise)
+- Function (build / consult / manage / deploy)
 - Seniority
-- Remote (full/hybrid/onsite)
-- Team size (si se menciona)
-- TL;DR en 1 frase
+- Remote (full / hybrid / on-site)
+- Team size (if mentioned)
+- TL;DR in 1 sentence
 
-## Bloque B — Match con CV
+## Block B — CV Match + Score
 
-Lee `cv.md`. Crea tabla con cada requisito del JD mapeado a líneas exactas del CV.
+Read `cv.md` and `article-digest.md`.
 
-**Adaptado al arquetipo:**
-- Si FDE → priorizar proof points de delivery rápida y client-facing
-- Si SA → priorizar diseño de sistemas e integrations
-- Si PM → priorizar product discovery y métricas
-- Si LLMOps → priorizar evals, observability, pipelines
-- Si Agentic → priorizar multi-agent, HITL, orchestration
-- Si Transformation → priorizar change management, adoption, scaling
+### Part 1: Extract and classify JD requirements
 
-Sección de **gaps** con estrategia de mitigación para cada uno. Para cada gap:
-1. ¿Es un hard blocker o un nice-to-have?
-2. ¿Puede el candidato demostrar experiencia adyacente?
-3. ¿Hay un proyecto portfolio que cubra este gap?
-4. Plan de mitigación concreto (frase para cover letter, proyecto rápido, etc.)
+Separate into two lists:
+- **Hard requirements** (must-have): tools explicitly required, years of experience, degree (if strict), domain knowledge the role clearly depends on
+- **Soft requirements** (preferred / bonus): "nice to have", "plus", adjacent skills
 
-## Bloque C — Nivel y Estrategia
+### Part 2: Match table
 
-1. **Nivel detectado** en el JD vs **nivel natural del candidato para ese arquetipo**
-2. **Plan "vender senior sin mentir"**: frases específicas adaptadas al arquetipo, logros concretos a destacar, cómo posicionar la experiencia de founder como ventaja
-3. **Plan "si me downlevelan"**: aceptar si comp es justa, negociar review a 6 meses, criterios de promoción claros
+For each requirement, map to exact evidence from the CV:
 
-## Bloque D — Comp y Demanda
+| JD Requirement | Type | CV Evidence | Match |
+|---|---|---|---|
+| [requirement] | Hard/Soft | [exact line or project] | Strong / Partial / Gap |
 
-Usar WebSearch para:
-- Salarios actuales del rol (Glassdoor, Levels.fyi, Blind)
-- Reputación de compensación de la empresa
-- Tendencia de demanda del rol
+See `_shared.md` for match criteria definitions, score formula, and bucket thresholds.
 
-Tabla con datos y fuentes citadas. Si no hay datos, decirlo en vez de inventar.
+### Part 3: Score + Tier Gate
 
-## Bloque E — Plan de Personalización
+Compute match % using the formula in `_shared.md`. Then:
 
-| # | Sección | Estado actual | Cambio propuesto | Por qué |
-|---|---------|---------------|------------------|---------|
+| Score | Action |
+|-------|--------|
+| < 75% (SKIP) | **Stop here.** Save minimal report (header + A + B). Log TSV with status `SKIP`. Do not run C–F. |
+| 75–85% (T3/T4) | Run C + E. Skip Block D (no comp WebSearch). Skip Block F unless user asks. |
+| > 85% (T1/T2) | Run all blocks A–F. |
+
+### Part 4: Gap mitigation
+
+For each gap:
+1. Hard blocker or nice-to-have?
+2. Adjacent experience available?
+3. Is there a portfolio project that covers this gap?
+4. One-sentence mitigation framing for cover letter or interview
+
+## Block C — Level & Positioning Strategy
+
+1. **Level detected** in the JD vs candidate's actual level
+2. **How to position the experience**: specific phrases, concrete achievements to highlight
+3. **If seniority gap**: accept if match is high; negotiate 6-month review with explicit promotion criteria
+
+## Block D — Comp & Demand (informational — does not affect score)
+
+Use WebSearch for:
+- Current salaries for the role (Glassdoor, Levels.fyi, Blind)
+- Company's comp reputation
+- Demand trend for the role
+
+Table with data and cited sources. If no data exists, say so rather than guessing. Compare against `modes/_profile.md` comp reference only for future offer context.
+
+## Block E — CV Personalization Plan
+
+| # | Section | Current state | Proposed change | Why |
+|---|---------|---------------|-----------------|-----|
 | 1 | Summary | ... | ... | ... |
 | ... | ... | ... | ... | ... |
 
-Top 5 cambios al CV + Top 5 cambios a LinkedIn para maximizar match.
+Top 5 changes to CV + top 5 changes to LinkedIn to maximize match.
 
-## Bloque F — Plan de Entrevistas
+## Block F — Interview Prep (STAR+R)
 
-6-10 historias STAR+R mapeadas a requisitos del JD (STAR + **Reflection**):
+6-10 STAR+R stories mapped to JD requirements (STAR + **Reflection**):
 
-| # | Requisito del JD | Historia STAR+R | S | T | A | R | Reflection |
-|---|-----------------|-----------------|---|---|---|---|------------|
+| # | JD Requirement | STAR+R Story | S | T | A | R | Reflection |
+|---|----------------|-------------|---|---|---|---|------------|
 
-The **Reflection** column captures what was learned or what would be done differently. This signals seniority — junior candidates describe what happened, senior candidates extract lessons.
+The **Reflection** column captures what was learned or what would be done differently. This signals seniority — junior candidates describe what happened; senior candidates extract lessons.
 
 **Story Bank:** If `interview-prep/story-bank.md` exists, check if any of these stories are already there. If not, append new ones. Over time this builds a reusable bank of 5-10 master stories that can be adapted to any interview question.
 
-**Seleccionadas y enmarcadas según el arquetipo:**
-- FDE → enfatizar velocidad de entrega y client-facing
-- SA → enfatizar decisiones de arquitectura
-- PM → enfatizar discovery y trade-offs
-- LLMOps → enfatizar métricas, evals, production hardening
-- Agentic → enfatizar orchestration, error handling, HITL
-- Transformation → enfatizar adopción, cambio organizacional
+**Framed by archetype:**
+- AI Platform / LLMOps → emphasize evals, observability, production metrics
+- Agentic / Automation → emphasize orchestration, error handling, HITL
+- Data Engineering → emphasize scale, quality, lineage, testing
+- Solutions Architect → emphasize system design decisions
+- Technical AI PM → emphasize discovery, trade-offs, stakeholder communication
+- Forward Deployed → emphasize fast delivery, client-facing impact
 
-Incluir también:
-- 1 case study recomendado (cuál de sus proyectos presentar y cómo)
-- Preguntas red-flag y cómo responderlas (ej: "¿por qué vendiste tu empresa?", "¿tienes equipo de reports?")
+Also include:
+- 1 recommended case study (which project to lead with and how to frame it)
+- Red-flag Q&A (e.g., "Your degree is Economics, not CS — how do you handle technical depth?")
 
 ---
 
-## Post-evaluación
+## Post-Evaluation
 
-**SIEMPRE** después de generar los bloques A-F:
+**ALWAYS** after generating Blocks A-F:
 
-### 1. Guardar report .md
+### 1. Save report .md
 
-Guardar evaluación completa en `reports/{###}-{company-slug}-{YYYY-MM-DD}.md`.
+Save the full evaluation to `reports/{###}-{company-slug}-{YYYY-MM-DD}.md`.
 
-- `{###}` = siguiente número secuencial (3 dígitos, zero-padded)
-- `{company-slug}` = nombre de empresa en lowercase, sin espacios (usar guiones)
-- `{YYYY-MM-DD}` = fecha actual
+- `{###}` = next sequential number (3 digits, zero-padded)
+- `{company-slug}` = company name in lowercase, no spaces (use hyphens)
+- `{YYYY-MM-DD}` = today's date
 
-**Formato del report:**
+**Report format:**
 
 ```markdown
-# Evaluación: {Empresa} — {Rol}
+# Evaluation: {Company} — {Role}
 
-**Fecha:** {YYYY-MM-DD}
-**Arquetipo:** {detectado}
-**Score:** {X/5}
-**PDF:** {ruta o pendiente}
+**Date:** {YYYY-MM-DD}
+**Archetype:** {detected}
+**Match:** {XX}% ({TN})
+**URL:** {offer URL}
+**PDF:** {path or pending}
 
 ---
 
-## A) Resumen del Rol
-(contenido completo del bloque A)
+## A) Role Summary
+(full Block A content)
 
-## B) Match con CV
-(contenido completo del bloque B)
+## B) CV Match
+(full Block B content — requirements table + match % + bucket)
 
-## C) Nivel y Estrategia
-(contenido completo del bloque C)
+## C) Level & Positioning Strategy
+(full Block C content)
 
-## D) Comp y Demanda
-(contenido completo del bloque D)
+## D) Comp & Demand (informational)
+(full Block D content)
 
-## E) Plan de Personalización
-(contenido completo del bloque E)
+## E) CV Personalization Plan
+(full Block E content)
 
-## F) Plan de Entrevistas
-(contenido completo del bloque F)
+## F) Interview Prep (STAR+R)
+(full Block F content)
 
 ## G) Draft Application Answers
-(solo si score >= 4.5 — borradores de respuestas para el formulario de aplicación)
+(only if T1 or T2 — match ≥ 91%)
 
 ---
 
-## Keywords extraídas
-(lista de 15-20 keywords del JD para ATS optimization)
+## Keywords Extracted
+(15-20 keywords from JD for ATS optimization)
+
+## Skill Map Data
+```json
+{
+  "title": "{role title}",
+  "company": "{company}",
+  "seniority": "{analyst|de-1|de-2|senior|staff|principal}",
+  "years_min": null,
+  "years_max": null,
+  "salary_min": null,
+  "salary_max": null,
+  "remote": true,
+  "domain": "{healthcare|fintech|adtech|govtech|edtech|general}",
+  "url": "{url}",
+  "match_score": 0,
+  "report_num": 0,
+  "hard_skills": [
+    {"name": "{skill}", "position": 1}
+  ],
+  "soft_skills": [
+    {"name": "{skill}", "position": 1}
+  ]
+}
+```
+*Run `node jd-ingest.mjs '<json>'` to add this to the skill map database.*
 ```
 
-### 2. Registrar en tracker
+### 2. Register in tracker
 
-**SIEMPRE** registrar en `data/applications.md`:
-- Siguiente número secuencial
-- Fecha actual
-- Empresa
-- Rol
-- Score: promedio de match (1-5)
-- Estado: `Evaluada`
-- PDF: ❌ (o ✅ si auto-pipeline generó PDF)
-- Report: link relativo al report .md (ej: `[001](reports/001-company-2026-01-01.md)`)
+**ALWAYS** register via TSV in `batch/tracker-additions/`:
+- Next sequential number
+- Today's date
+- Company
+- Role
+- Score: format `XX% (TN)` — e.g., `87% (T3)`
+- Status: `Evaluated`
+- PDF: ❌ (or ✅ if auto-pipeline generated PDF)
+- Report: relative link to the report .md
 
-**Formato del tracker:**
+**Tracker format:**
 
 ```markdown
-| # | Fecha | Empresa | Rol | Score | Estado | PDF | Report |
+| # | Date | Company | Role | Score | Status | PDF | Report | Notes |
 ```
