@@ -4,6 +4,20 @@ All system modifications, bug fixes, and architectural changes are recorded here
 
 ---
 
+## [2026-04-17 14:40] - Technical Documentation: SYSTEM_DESIGN.md
+
+### Changes
+- **Architectural Specification**: Created `docs/SYSTEM_DESIGN.md`, an exhaustive technical document designed for a high-level technical audience (Senior Engineers/Investors).
+- **System Mapping**: Documented the "Mode Pattern," "Data Contract," and the functional layers of the pipeline (Verification, Heuristic Scoring, Asset Generation).
+- **Security Deep-Dive**: Formally specified the "Air-Gapped" personal layer and secret management strategy.
+- **Portability Focus**: Highlighted the system's ability to run across different LLMs due to its Markdown-centric logic.
+
+### Technical Notes
+- Structured for markdown-to-docx portability.
+- Integrated findings from `analyze-patterns.mjs` and `skill-roadmap.mjs` regarding data governance and market intelligence scaling.
+
+---
+
 ## [2026-04-17 14:15] - System Initialization & GitHub Migration
 
 ### Changes
